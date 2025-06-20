@@ -12,6 +12,7 @@ const SignupSection: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [showInterestOptions, setShowInterestOptions] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -87,34 +88,35 @@ const SignupSection: React.FC = () => {
       ...formData,
       interest
     });
+    setShowInterestOptions(false);
+  };
+
+  const toggleInterestOptions = () => {
+    setShowInterestOptions(!showInterestOptions);
   };
 
   const interestOptions = [
     {
       id: 'pdf',
-      title: 'PDF Pages',
-      description: 'Print at home instantly',
+      title: 'PDF pages to print at home',
       icon: FileText,
       gradient: 'from-blue-400 to-blue-600',
-      hoverGradient: 'from-blue-500 to-blue-700',
     },
     {
       id: 'book',
-      title: 'Coloring Book',
-      description: 'Shipped to your door',
+      title: 'A complete coloring book shipped to me',
       icon: Package,
       gradient: 'from-purple-400 to-purple-600',
-      hoverGradient: 'from-purple-500 to-purple-700',
     },
     {
       id: 'both',
-      title: 'Both Options',
-      description: 'Best of both worlds',
+      title: 'Both options',
       icon: Sparkles,
       gradient: 'from-pink-400 to-yellow-400',
-      hoverGradient: 'from-pink-500 to-yellow-500',
     },
   ];
+
+  const selectedOption = interestOptions.find(option => option.id === formData.interest);
 
   if (isSubmitted) {
     return (
@@ -155,7 +157,7 @@ const SignupSection: React.FC = () => {
         <form onSubmit={handleSubmit} className={`opacity-0 ${
           isVisible ? 'animate-scroll-fade-up-more-delayed' : ''
         }`}>
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div>
               <label htmlFor="name" className="block font-inter font-medium text-charcoal mb-2">
                 Your Name
@@ -190,71 +192,68 @@ const SignupSection: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="block font-inter font-medium text-charcoal mb-4">
+            <div className="relative">
+              <label className="block font-inter font-medium text-charcoal mb-2">
                 What are you interested in?
               </label>
-              <div className="grid gap-4">
-                {interestOptions.map((option) => {
-                  const IconComponent = option.icon;
-                  const isSelected = formData.interest === option.id;
-                  
-                  return (
-                    <button
-                      key={option.id}
-                      type="button"
-                      onClick={() => handleInterestSelect(option.id as 'pdf' | 'book' | 'both')}
-                      disabled={isSubmitting}
-                      className={`relative p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
-                        isSelected
-                          ? 'border-transparent shadow-lg'
-                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
-                      }`}
-                    >
-                      {/* Background gradient for selected state */}
-                      {isSelected && (
-                        <div className={`absolute inset-0 bg-gradient-to-r ${option.gradient} rounded-2xl opacity-10`} />
-                      )}
-                      
-                      <div className="relative flex items-center space-x-4">
-                        <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
-                          isSelected
-                            ? `bg-gradient-to-r ${option.gradient} text-white shadow-lg`
-                            : 'bg-gray-100 text-gray-600'
-                        }`}>
-                          <IconComponent className="w-6 h-6" />
-                        </div>
-                        
-                        <div className="flex-1 text-left">
-                          <h3 className={`font-inter font-semibold text-lg transition-colors duration-300 ${
-                            isSelected ? 'text-charcoal' : 'text-gray-800'
-                          }`}>
-                            {option.title}
-                          </h3>
-                          <p className={`font-inter text-sm transition-colors duration-300 ${
-                            isSelected ? 'text-gray-700' : 'text-gray-600'
-                          }`}>
-                            {option.description}
-                          </p>
-                        </div>
-                        
-                        {/* Selection indicator */}
-                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 transition-all duration-300 ${
-                          isSelected
-                            ? `bg-gradient-to-r ${option.gradient} border-transparent`
-                            : 'border-gray-300'
-                        }`}>
-                          {isSelected && (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <div className="w-2 h-2 bg-white rounded-full" />
-                            </div>
-                          )}
-                        </div>
+              
+              {/* Custom Select Button */}
+              <button
+                type="button"
+                onClick={toggleInterestOptions}
+                disabled={isSubmitting}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white text-left flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:border-gray-300"
+              >
+                <div className="flex items-center space-x-3">
+                  {selectedOption ? (
+                    <>
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${selectedOption.gradient} flex items-center justify-center`}>
+                        <selectedOption.icon className="w-4 h-4 text-white" />
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
+                      <span className="text-charcoal">{selectedOption.title}</span>
+                    </>
+                  ) : (
+                    <>
+                      <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                        <Sparkles className="w-4 h-4 text-gray-500" />
+                      </div>
+                      <span className="text-gray-500">Select an option...</span>
+                    </>
+                  )}
+                </div>
+                <div className={`transform transition-transform duration-300 ${showInterestOptions ? 'rotate-180' : ''}`}>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
+
+              {/* Dropdown Options */}
+              {showInterestOptions && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden animate-scroll-fade-up">
+                  {interestOptions.map((option, index) => {
+                    const IconComponent = option.icon;
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => handleInterestSelect(option.id as 'pdf' | 'book' | 'both')}
+                        disabled={isSubmitting}
+                        className={`w-full px-4 py-3 text-left flex items-center space-x-3 transition-all duration-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed opacity-0 animate-scroll-fade-up`}
+                        style={{ 
+                          animationDelay: `${index * 0.1}s`,
+                          animationFillMode: 'forwards'
+                        }}
+                      >
+                        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${option.gradient} flex items-center justify-center`}>
+                          <IconComponent className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="font-inter text-charcoal">{option.title}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             
             {error && (
