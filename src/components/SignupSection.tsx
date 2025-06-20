@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, FileText, Package, Sparkles } from 'lucide-react';
 import { supabase, type WaitlistSubmission } from '../lib/supabase';
 
 const SignupSection: React.FC = () => {
@@ -75,12 +75,46 @@ const SignupSection: React.FC = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
   };
+
+  const handleInterestSelect = (interest: 'pdf' | 'book' | 'both') => {
+    setFormData({
+      ...formData,
+      interest
+    });
+  };
+
+  const interestOptions = [
+    {
+      id: 'pdf',
+      title: 'PDF Pages',
+      description: 'Print at home instantly',
+      icon: FileText,
+      gradient: 'from-blue-400 to-blue-600',
+      hoverGradient: 'from-blue-500 to-blue-700',
+    },
+    {
+      id: 'book',
+      title: 'Coloring Book',
+      description: 'Shipped to your door',
+      icon: Package,
+      gradient: 'from-purple-400 to-purple-600',
+      hoverGradient: 'from-purple-500 to-purple-700',
+    },
+    {
+      id: 'both',
+      title: 'Both Options',
+      description: 'Best of both worlds',
+      icon: Sparkles,
+      gradient: 'from-pink-400 to-yellow-400',
+      hoverGradient: 'from-pink-500 to-yellow-500',
+    },
+  ];
 
   if (isSubmitted) {
     return (
@@ -121,7 +155,7 @@ const SignupSection: React.FC = () => {
         <form onSubmit={handleSubmit} className={`opacity-0 ${
           isVisible ? 'animate-scroll-fade-up-more-delayed' : ''
         }`}>
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
               <label htmlFor="name" className="block font-inter font-medium text-charcoal mb-2">
                 Your Name
@@ -157,24 +191,70 @@ const SignupSection: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="interest" className="block font-inter font-medium text-charcoal mb-2">
+              <label className="block font-inter font-medium text-charcoal mb-4">
                 What are you interested in?
               </label>
-              <select
-                id="interest"
-                name="interest"
-                value={formData.interest}
-                onChange={handleInputChange}
-                disabled={isSubmitting}
-                className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white disabled:opacity-50 disabled:cursor-not-allowed ${
-                  !formData.interest ? 'text-gray-400' : 'text-charcoal'
-                }`}
-              >
-                <option value="" disabled>Select an option...</option>
-                <option value="pdf">PDF pages to print at home</option>
-                <option value="book">A complete coloring book shipped to me</option>
-                <option value="both">Both</option>
-              </select>
+              <div className="grid gap-4">
+                {interestOptions.map((option) => {
+                  const IconComponent = option.icon;
+                  const isSelected = formData.interest === option.id;
+                  
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => handleInterestSelect(option.id as 'pdf' | 'book' | 'both')}
+                      disabled={isSubmitting}
+                      className={`relative p-6 rounded-2xl border-2 transition-all duration-500 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none ${
+                        isSelected
+                          ? 'border-transparent shadow-lg'
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                      }`}
+                    >
+                      {/* Background gradient for selected state */}
+                      {isSelected && (
+                        <div className={`absolute inset-0 bg-gradient-to-r ${option.gradient} rounded-2xl opacity-10`} />
+                      )}
+                      
+                      <div className="relative flex items-center space-x-4">
+                        <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 ${
+                          isSelected
+                            ? `bg-gradient-to-r ${option.gradient} text-white shadow-lg`
+                            : 'bg-gray-100 text-gray-600'
+                        }`}>
+                          <IconComponent className="w-6 h-6" />
+                        </div>
+                        
+                        <div className="flex-1 text-left">
+                          <h3 className={`font-inter font-semibold text-lg transition-colors duration-300 ${
+                            isSelected ? 'text-charcoal' : 'text-gray-800'
+                          }`}>
+                            {option.title}
+                          </h3>
+                          <p className={`font-inter text-sm transition-colors duration-300 ${
+                            isSelected ? 'text-gray-700' : 'text-gray-600'
+                          }`}>
+                            {option.description}
+                          </p>
+                        </div>
+                        
+                        {/* Selection indicator */}
+                        <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 transition-all duration-300 ${
+                          isSelected
+                            ? `bg-gradient-to-r ${option.gradient} border-transparent`
+                            : 'border-gray-300'
+                        }`}>
+                          {isSelected && (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <div className="w-2 h-2 bg-white rounded-full" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             
             {error && (
