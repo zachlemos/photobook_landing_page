@@ -41,25 +41,32 @@ const SplitViewCard: React.FC<SplitViewCardProps> = ({
     if (!hasInteracted) setHasInteracted(true);
   };
 
-  const handleTouchStart = () => {
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
     setIsDragging(true);
     if (!hasInteracted) setHasInteracted(true);
   };
 
   useEffect(() => {
     const handleMouseUp = () => setIsDragging(false);
-    const handleTouchEnd = () => setIsDragging(false);
+    const handleTouchEnd = (e: TouchEvent) => {
+      e.preventDefault();
+      setIsDragging(false);
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) handleMove(e.clientY);
     };
     const handleTouchMove = (e: TouchEvent) => {
-      if (isDragging) handleMove(e.touches[0].clientY);
+      if (isDragging) {
+        e.preventDefault();
+        handleMove(e.touches[0].clientY);
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
     window.addEventListener('touchend', handleTouchEnd);
 
     return () => {
@@ -76,7 +83,9 @@ const SplitViewCard: React.FC<SplitViewCardProps> = ({
         if (entry.isIntersecting) {
           setIsVisible(true);
           // eslint-disable-next-line react-hooks/exhaustive-deps
-          observer.unobserve(containerRef.current);
+          if (containerRef.current) {
+            observer.unobserve(containerRef.current);
+          }
         }
       },
       { threshold: 0.5 }
