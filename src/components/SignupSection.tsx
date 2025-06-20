@@ -6,7 +6,7 @@ const SignupSection: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    interest: 'pdf' as 'pdf' | 'book' | 'both'
+    interest: '' as 'pdf' | 'book' | 'both' | ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -50,10 +50,13 @@ const SignupSection: React.FC = () => {
       const submission: Omit<WaitlistSubmission, 'id' | 'created_at'> = {
         name: formData.name.trim(),
         email: formData.email.trim(),
-        interest: formData.interest,
         user_agent: userAgent,
         ip_address: null
       };
+
+      if (formData.interest) {
+        submission.interest = formData.interest;
+      }
 
       const { error: insertError } = await supabase
         .from('waitlist_submissions')
@@ -162,10 +165,10 @@ const SignupSection: React.FC = () => {
                 name="interest"
                 value={formData.interest}
                 onChange={handleInputChange}
-                required
                 disabled={isSubmitting}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
               >
+                <option value="" disabled>Select an option...</option>
                 <option value="pdf">PDF pages to print at home</option>
                 <option value="book">A complete coloring book shipped to me</option>
                 <option value="both">Both</option>
