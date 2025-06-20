@@ -166,7 +166,9 @@ const SignupSection: React.FC = () => {
                 value={formData.interest}
                 onChange={handleInputChange}
                 disabled={isSubmitting}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white disabled:opacity-50 disabled:cursor-not-allowed ${
+                  !formData.interest ? 'text-gray-400' : 'text-charcoal'
+                }`}
               >
                 <option value="" disabled>Select an option...</option>
                 <option value="pdf">PDF pages to print at home</option>
