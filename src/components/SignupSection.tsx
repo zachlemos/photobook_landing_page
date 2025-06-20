@@ -6,7 +6,7 @@ const SignupSection: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    interest: '' as 'pdf' | 'book' | 'both' | ''
+    interest: 'pdf' as 'pdf' | 'book' | 'both'
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,13 +51,10 @@ const SignupSection: React.FC = () => {
       const submission: Omit<WaitlistSubmission, 'id' | 'created_at'> = {
         name: formData.name.trim(),
         email: formData.email.trim(),
+        interest: formData.interest,
         user_agent: userAgent,
         ip_address: null
       };
-
-      if (formData.interest) {
-        submission.interest = formData.interest;
-      }
 
       const { error: insertError } = await supabase
         .from('waitlist_submissions')
