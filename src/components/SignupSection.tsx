@@ -6,7 +6,7 @@ const SignupSection: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    interest: 'pdf' as 'pdf' | 'book' | 'both'
+    interest: '' as 'pdf' | 'book' | 'both' | ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +51,7 @@ const SignupSection: React.FC = () => {
       const submission: Omit<WaitlistSubmission, 'id' | 'created_at'> = {
         name: formData.name.trim(),
         email: formData.email.trim(),
-        interest: formData.interest,
+        interest: formData.interest || null,
         user_agent: userAgent,
         ip_address: null
       };
@@ -191,7 +191,7 @@ const SignupSection: React.FC = () => {
 
             <div className="relative">
               <label className="block font-inter font-medium text-charcoal mb-2">
-                What are you interested in?
+                What are you interested in? <span className="text-gray-400 text-sm">(optional)</span>
               </label>
               
               {/* Custom Select Button */}
