@@ -55,10 +55,9 @@ const SignupSection: React.FC = () => {
         ip_address: null
       };
 
-      const { data, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('waitlist_submissions')
-        .insert([submission])
-        .select();
+        .insert([submission]);
 
       if (insertError) {
         throw insertError;
