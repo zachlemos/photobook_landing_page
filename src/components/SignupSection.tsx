@@ -161,7 +161,7 @@ const SignupSection: React.FC = () => {
           <h2 className={`font-playfair text-3xl md:text-4xl font-bold text-charcoal mb-6 opacity-0 ${
             isVisible ? 'animate-scroll-fade-up' : ''
           }`}>
-            Be first to try it
+            Be the first to bring your memories to life
           </h2>
           <p className={`font-inter text-lg text-gray-600 leading-relaxed opacity-0 ${
             isVisible ? 'animate-scroll-fade-up-delayed' : ''
@@ -173,7 +173,7 @@ const SignupSection: React.FC = () => {
 
         <div className={`mb-8 text-center opacity-0 ${isVisible ? 'animate-scroll-fade-up-more-delayed' : ''}`}>
           <p className="font-inter text-gray-700">
-            🎉 <span className="font-semibold">32</span> families have already joined the waitlist!
+            🎉 <span className="font-semibold">32/50</span> families have already joined the waitlist!
           </p>
         </div>
 
