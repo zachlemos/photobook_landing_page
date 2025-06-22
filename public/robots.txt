@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://colormagic.app/sitemap.xml 
+Sitemap: https://www.colormymoments.app/sitemap.xml 

@@ -146,7 +146,7 @@ const SignupSection: React.FC = () => {
             Thank you!
           </h2>
           <p className="font-inter text-lg text-gray-600 animate-scroll-fade-up-more-delayed">
-            We'll be in touch soon with updates about ColorMagic. 
+            We'll be in touch soon with updates about Color My Moments. 
             Get ready to turn your favorite memories into magical coloring adventures!
           </p>
         </div>
@@ -166,7 +166,7 @@ const SignupSection: React.FC = () => {
           <p className={`font-inter text-lg text-gray-600 leading-relaxed opacity-0 ${
             isVisible ? 'animate-scroll-fade-up-delayed' : ''
           }`}>
-            Leave your info and we'll reach out when ColorMagic is ready. 
+            Leave your info and we'll reach out when Color My Moments is ready. 
             No spam, just an update when we're ready to turn your precious memories into coloring magic.
           </p>
         </div>
