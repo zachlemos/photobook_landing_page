@@ -54,7 +54,7 @@ const HeroSection: React.FC = () => {
         
         <div className={`mt-6 opacity-0 ${isLoaded ? 'animate-hero-fade-in-more-delayed' : ''}`}>
           <p className="text-off-white/60 font-inter text-sm md:text-base">
-            Limited early invites — we're starting with just 50 spots
+            Limited early invites. We're starting with just 50 spots
           </p>
         </div>
       </div>
