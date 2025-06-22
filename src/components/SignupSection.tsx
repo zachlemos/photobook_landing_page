@@ -171,6 +171,12 @@ const SignupSection: React.FC = () => {
           </p>
         </div>
 
+        <div className={`mb-8 text-center opacity-0 ${isVisible ? 'animate-scroll-fade-up-more-delayed' : ''}`}>
+          <p className="font-inter text-gray-700">
+            🎉 <span className="font-semibold">32</span> families have already joined the waitlist!
+          </p>
+        </div>
+
         <form onSubmit={handleSubmit} className={`opacity-0 ${
           isVisible ? 'animate-scroll-fade-up-more-delayed' : ''
         }`}>

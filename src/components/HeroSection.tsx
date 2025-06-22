@@ -51,6 +51,12 @@ const HeroSection: React.FC = () => {
         >
           Join the waitlist — bring your memories to life
         </button>
+        
+        <div className={`mt-6 opacity-0 ${isLoaded ? 'animate-hero-fade-in-more-delayed' : ''}`}>
+          <div className="inline-block bg-cream/10 backdrop-blur-sm text-off-white/80 font-inter text-sm md:text-base px-4 py-2 rounded-full border border-white/10 shadow-lg">
+            🚨 Limited early invites — we're starting with just 50 spots
+          </div>
+        </div>
       </div>
       
       <div 
