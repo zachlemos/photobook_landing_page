@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronsUpDown } from 'lucide-react';
+import { track } from '@vercel/analytics';
 
 interface SplitViewCardProps {
   originalImage: string;
@@ -38,13 +39,27 @@ const SplitViewCard: React.FC<SplitViewCardProps> = ({
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    if (!hasInteracted) setHasInteracted(true);
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      // Track first interaction with this example
+      track('example_card_interaction', {
+        title: title,
+        interaction_type: 'mouse_drag'
+      });
+    }
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    if (!hasInteracted) setHasInteracted(true);
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      // Track first interaction with this example
+      track('example_card_interaction', {
+        title: title,
+        interaction_type: 'touch_drag'
+      });
+    }
   };
 
   useEffect(() => {

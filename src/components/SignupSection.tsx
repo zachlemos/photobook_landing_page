@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Heart, FileText, Package, Sparkles } from 'lucide-react';
+import { track } from '@vercel/analytics';
 import { supabase, type WaitlistSubmission } from '../lib/supabase';
 
 const SignupSection: React.FC = () => {
@@ -45,6 +46,13 @@ const SignupSection: React.FC = () => {
     setIsSubmitting(true);
     setError(null);
 
+    // Track form submission attempt
+    track('waitlist_signup_attempted', {
+      interest: formData.interest,
+      hasName: !!formData.name.trim(),
+      hasEmail: !!formData.email.trim()
+    });
+
     try {
       const userAgent = navigator.userAgent;
       
@@ -56,17 +64,29 @@ const SignupSection: React.FC = () => {
         ip_address: null
       };
 
-      const { error: insertError } = await supabase
+      const { data, error: insertError } = await supabase
         .from('waitlist_submissions')
-        .insert([submission]);
+        .insert([submission])
+        .select();
 
       if (insertError) {
         throw insertError;
       }
 
+      // Track successful submission
+      track('waitlist_signup_success', {
+        interest: formData.interest
+      });
+
       setIsSubmitted(true);
     } catch (err) {
       console.error('Error submitting form:', err);
+      
+      // Track submission error
+      track('waitlist_signup_error', {
+        error: err instanceof Error ? err.message : 'Unknown error'
+      });
+      
       setError('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);

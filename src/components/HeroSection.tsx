@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { track } from '@vercel/analytics';
 
 const HeroSection: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -16,6 +17,11 @@ const HeroSection: React.FC = () => {
   const scrollToNextSection = () => {
     const nextSection = document.getElementById('how-it-works');
     nextSection?.scrollIntoView({ behavior: 'smooth' });
+    
+    // Track scroll interaction
+    track('hero_scroll_to_section', {
+      section: 'how_it_works'
+    });
   };
 
   return (

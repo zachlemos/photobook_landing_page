@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import HeroSection from './components/HeroSection';
 import HowItWorksSection from './components/HowItWorksSection';
 import ExamplesSection from './components/ExamplesSection';
@@ -23,6 +24,7 @@ function App() {
       <ExamplesSection />
       <SignupSection />
       <Footer />
+      <Analytics />
     </div>
   );
 }
