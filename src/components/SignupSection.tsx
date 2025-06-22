@@ -14,7 +14,31 @@ const SignupSection: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [showInterestOptions, setShowInterestOptions] = useState(false);
+  const [waitlistCount, setWaitlistCount] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const fetchWaitlistCount = async () => {
+      try {
+        const { data, error } = await supabase.rpc('get_waitlist_count');
+        
+        if (error) {
+          throw error;
+        }
+
+        if (data) {
+          // Start with a base of 32 if the count is lower, as per original design
+          setWaitlistCount(Math.max(data, 32));
+        }
+      } catch (err) {
+        console.error('Error fetching waitlist count:', err);
+        // Fallback to the static number if the fetch fails
+        setWaitlistCount(32);
+      }
+    };
+
+    fetchWaitlistCount();
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -134,6 +158,16 @@ const SignupSection: React.FC = () => {
 
   const selectedOption = interestOptions.find(option => option.id === formData.interest);
 
+  const getDynamicDenominator = (count: number): number => {
+    const tiers = [50, 75, 100, 125, 150, 200, 250, 300, 400, 500];
+    // Find the first tier that is comfortably larger than the current count
+    const suitableTier = tiers.find(tier => count < tier - 5);
+    // If no suitable tier is found (i.e., count is very high), create a new one.
+    return suitableTier || Math.ceil(count / 50) * 50;
+  };
+
+  const denominator = waitlistCount !== null ? getDynamicDenominator(waitlistCount) : 50;
+
   if (isSubmitted) {
     return (
       <section ref={sectionRef} id="signup" className="py-20 bg-white">
@@ -170,11 +204,13 @@ const SignupSection: React.FC = () => {
           </p>
         </div>
 
-        <div className={`mb-8 text-center opacity-0 ${isVisible ? 'animate-scroll-fade-up-more-delayed' : ''}`}>
-          <p className="font-inter text-gray-700">
-            🎉 <span className="font-semibold">32/50</span> families have already joined the waitlist!
-          </p>
-        </div>
+        {waitlistCount !== null && (
+          <div className={`mb-8 text-center opacity-0 ${isVisible ? 'animate-scroll-fade-up-more-delayed' : ''}`}>
+            <p className="font-inter text-gray-700">
+              🎉 <span className="font-semibold">{waitlistCount}/{denominator}</span> families have already joined the waitlist!
+            </p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className={`opacity-0 ${
           isVisible ? 'animate-scroll-fade-up-more-delayed' : ''
