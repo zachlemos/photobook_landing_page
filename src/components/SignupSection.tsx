@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Heart, FileText, Package, Sparkles } from 'lucide-react';
 import { track } from '@vercel/analytics';
 import { supabase, type WaitlistSubmission } from '../lib/supabase';
+import { trackSignUp, trackLead, trackCustomEvent } from '../lib/analytics';
+import { config } from '../lib/config';
 
 const SignupSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -27,8 +29,8 @@ const SignupSection: React.FC = () => {
         }
 
         if (data != null) {
-          // Use the real count, but ensure it's at least our "base" of 32 for marketing
-          setWaitlistCount(Math.max(data, 32));
+          // Use the real count from the database
+          setWaitlistCount(data);
         }
       } catch (err) {
         console.error('Error fetching waitlist count:', err);
@@ -76,6 +78,16 @@ const SignupSection: React.FC = () => {
       hasEmail: !!formData.email.trim()
     });
 
+    // Meta Pixel tracking for form submission attempt
+    if (config.enableMetaPixel) {
+      trackCustomEvent('FormSubmissionAttempt', {
+        form_name: 'Waitlist Signup',
+        interest: formData.interest,
+        has_name: !!formData.name.trim(),
+        has_email: !!formData.email.trim()
+      });
+    }
+
     try {
       const userAgent = navigator.userAgent;
       
@@ -100,6 +112,17 @@ const SignupSection: React.FC = () => {
         interest: formData.interest
       });
 
+      // Meta Pixel tracking for successful signup
+      if (config.enableMetaPixel) {
+        trackSignUp();
+        trackLead(0, 'USD'); // Track as a lead with no monetary value
+        trackCustomEvent('WaitlistSignupSuccess', {
+          interest: formData.interest,
+          user_name: formData.name.trim(),
+          user_email: formData.email.trim()
+        });
+      }
+
       setIsSubmitted(true);
     } catch (err) {
       console.error('Error submitting form:', err);
@@ -108,6 +131,14 @@ const SignupSection: React.FC = () => {
       track('waitlist_signup_error', {
         error: err instanceof Error ? err.message : 'Unknown error'
       });
+
+      // Meta Pixel tracking for submission error
+      if (config.enableMetaPixel) {
+        trackCustomEvent('FormSubmissionError', {
+          form_name: 'Waitlist Signup',
+          error: err instanceof Error ? err.message : 'Unknown error'
+        });
+      }
       
       setError('Something went wrong. Please try again.');
     } finally {
@@ -158,11 +189,11 @@ const SignupSection: React.FC = () => {
   const selectedOption = interestOptions.find(option => option.id === formData.interest);
 
   const getDynamicDenominator = (count: number): number => {
-    const tiers = [50, 75, 100, 125, 150, 200, 250, 300, 400, 500];
-    // Find the first tier that is comfortably larger than the current count
-    const suitableTier = tiers.find(tier => count < tier - 5);
-    // If no suitable tier is found (i.e., count is very high), create a new one.
-    return suitableTier || Math.ceil(count / 50) * 50;
+    let denominator = 50;
+    while (count >= denominator) {
+      denominator += 25;
+    }
+    return denominator;
   };
 
   const denominator = getDynamicDenominator(waitlistCount);
