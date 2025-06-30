@@ -17,6 +17,7 @@ const SignupSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [showInterestOptions, setShowInterestOptions] = useState(false);
   const [waitlistCount, setWaitlistCount] = useState<number>(32);
+  const [hasStartedForm, setHasStartedForm] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -198,6 +199,14 @@ const SignupSection: React.FC = () => {
 
   const denominator = getDynamicDenominator(waitlistCount);
 
+  // Track first form interaction
+  const handleFormStart = () => {
+    if (!hasStartedForm) {
+      setHasStartedForm(true);
+      track('waitlist_form_started');
+    }
+  };
+
   if (isSubmitted) {
     return (
       <section ref={sectionRef} id="signup" className="py-20 bg-white">
@@ -254,6 +263,7 @@ const SignupSection: React.FC = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                onFocus={handleFormStart}
                 required
                 disabled={isSubmitting}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -271,6 +281,7 @@ const SignupSection: React.FC = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                onFocus={handleFormStart}
                 required
                 disabled={isSubmitting}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -287,6 +298,7 @@ const SignupSection: React.FC = () => {
               <button
                 type="button"
                 onClick={toggleInterestOptions}
+                onFocus={handleFormStart}
                 disabled={isSubmitting}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-300 focus:outline-none transition-all duration-500 font-inter transform focus:scale-105 bg-white text-left flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none hover:border-gray-300"
               >
