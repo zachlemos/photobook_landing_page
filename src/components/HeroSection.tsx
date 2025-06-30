@@ -44,7 +44,10 @@ const HeroSection: React.FC = () => {
         </p>
         
         <button 
-          onClick={() => document.getElementById('signup')?.scrollIntoView({ behavior: 'smooth' })}
+          onClick={() => {
+            track('hero_join_waitlist_clicked');
+            document.getElementById('signup')?.scrollIntoView({ behavior: 'smooth' });
+          }}
           className={`bg-gradient-accent hover:bg-gradient-accent-hover text-charcoal font-inter font-semibold px-8 py-4 rounded-full text-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl opacity-0 ${
             isLoaded ? 'animate-hero-fade-in-more-delayed' : ''
           }`}
