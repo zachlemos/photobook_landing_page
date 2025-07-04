@@ -7,8 +7,11 @@ import SignupSection from './components/SignupSection';
 import Footer from './components/Footer';
 import { initMetaPixel, trackPageView, trackViewContent } from './lib/analytics';
 import { config } from './lib/config';
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const location = useLocation();
+
   useEffect(() => {
     // Add smooth scrolling behavior with enhanced easing
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -29,6 +32,13 @@ function App() {
       document.documentElement.style.scrollBehavior = 'auto';
     };
   }, []);
+
+  useEffect(() => {
+    // Fire Meta Pixel PageView on every route change
+    if (config.enableMetaPixel) {
+      trackPageView();
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen">
