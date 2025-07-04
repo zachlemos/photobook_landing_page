@@ -63,6 +63,9 @@ const SplitViewCard: React.FC<SplitViewCardProps> = ({
   };
 
   useEffect(() => {
+    const imageContainer = imageContainerRef.current;
+    if (!imageContainer) return;
+
     const handleMouseUp = () => setIsDragging(false);
     const handleTouchEnd = (e: TouchEvent) => {
       e.preventDefault();
@@ -81,14 +84,14 @@ const SplitViewCard: React.FC<SplitViewCardProps> = ({
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('touchmove', handleTouchMove, { passive: false });
-    window.addEventListener('touchend', handleTouchEnd);
+    imageContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+    imageContainer.addEventListener('touchend', handleTouchEnd);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      imageContainer.removeEventListener('touchmove', handleTouchMove);
+      imageContainer.removeEventListener('touchend', handleTouchEnd);
     };
   }, [isDragging]);
 
