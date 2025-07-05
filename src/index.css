@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* DEBUG: Outline all elements to find overlays */
+/*
+* {
+  outline: 1px solid red !important;
+}
+*/
