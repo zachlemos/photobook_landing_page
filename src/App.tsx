@@ -8,13 +8,7 @@ import Footer from './components/Footer';
 import { initMetaPixel, trackPageView, trackViewContent } from './lib/analytics';
 import { config } from './lib/config';
 import { useLocation } from 'react-router-dom';
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignUpButton,
-  UserButton
-} from "@clerk/clerk-react";
+import { SignupProvider } from './components/SignupContext';
 
 function App() {
   const location = useLocation();
@@ -49,20 +43,12 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      {/* Clerk Auth Buttons */}
-      <div className="w-full flex justify-end items-center gap-4 p-4">
-        <SignedOut>
-          <SignInButton />
-          <SignUpButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </div>
-      <HeroSection />
-      <HowItWorksSection />
-      <ExamplesSection />
-      <SignupSection />
+      <SignupProvider>
+        <HeroSection />
+        <HowItWorksSection />
+        <ExamplesSection />
+        <SignupSection />
+      </SignupProvider>
       <Footer />
       {config.enableVercelAnalytics && <Analytics />}
     </div>

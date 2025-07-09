@@ -9,7 +9,6 @@ export type WaitlistSubmission = {
   id?: string
   name: string
   email: string
-  interest?: 'pdf' | 'book' | 'both' | null
   created_at?: string
   ip_address?: string | null
   user_agent?: string

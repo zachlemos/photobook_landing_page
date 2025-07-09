@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronDown } from 'lucide-react';
 import { track } from '@vercel/analytics';
+import SignupForm from './SignupForm';
+import SignupModal from './SignupModal';
 
 const HeroSection: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     // Trigger animations after component mounts
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
+
+    // Track hero section view
+    track('hero_viewed');
 
     return () => clearTimeout(timer);
   }, []);
@@ -32,28 +37,38 @@ const HeroSection: React.FC = () => {
         }`}>
           Turn your favorite family photos into{' '}
           <span className="bg-gradient-accent bg-clip-text text-transparent">
-            magical coloring pages
+            magical coloring books
           </span>
         </h1>
         
         <p className={`font-inter text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed opacity-0 ${
           isLoaded ? 'animate-hero-fade-in-delayed' : ''
         }`}>
-          Upload a memory. We'll turn it into a printable or shippable coloring page 
-          your child will love.
+          Upload your memories. We'll turn them into a custom coloring book your child will love.
         </p>
         
-        <button 
-          onClick={() => {
-            track('hero_join_waitlist_clicked');
-            document.getElementById('signup')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          className={`bg-gradient-accent hover:bg-gradient-accent-hover text-charcoal font-inter font-semibold px-8 py-4 rounded-full text-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl opacity-0 ${
-            isLoaded ? 'animate-hero-fade-in-more-delayed' : ''
-          }`}
-        >
-          Join the waitlist — bring your memories to life
-        </button>
+        {/* CTA Buttons - horizontal row */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+          <button 
+            onClick={() => {
+              track('hero_join_waitlist_clicked', { location: 'top' });
+              setShowModal(true);
+            }}
+            className={`bg-gradient-accent hover:bg-gradient-accent-hover text-charcoal font-inter font-semibold px-8 py-4 rounded-full text-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl opacity-0 ${
+              isLoaded ? 'animate-hero-fade-in-more-delayed' : ''
+            }`}
+          >
+            Join the waitlist
+          </button>
+          <button
+            onClick={scrollToNextSection}
+            className={`bg-white/10 border border-white/20 text-off-white font-inter font-semibold px-8 py-4 rounded-full text-lg transition-all duration-300 hover:bg-white/20 hover:text-white opacity-0 ${
+              isLoaded ? 'animate-hero-fade-in-more-delayed' : ''
+            }`}
+          >
+            Learn More
+          </button>
+        </div>
         
         <div className={`mt-6 opacity-0 ${isLoaded ? 'animate-hero-fade-in-more-delayed' : ''}`}>
           <p className="text-off-white/60 font-inter text-sm md:text-base">
@@ -62,14 +77,9 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
       
-      <div 
-        className={`absolute bottom-8 cursor-pointer opacity-0 ${
-          isLoaded ? 'animate-hero-fade-in-more-delayed animate-float-gentle' : ''
-        }`}
-        onClick={scrollToNextSection}
-      >
-        <ChevronDown className="w-8 h-8 text-gray-400 hover:text-off-white transition-colors duration-500" />
-      </div>
+      <SignupModal open={showModal} onClose={() => setShowModal(false)}>
+        <SignupForm location="top" showFamiliesJoined={true} />
+      </SignupModal>
     </section>
   );
 };
