@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import { initMetaPixel, trackPageView, trackViewContent } from './lib/analytics';
 import { config } from './lib/config';
 import { useLocation } from 'react-router-dom';
+import { SignupProvider } from './components/SignupContext';
 
 function App() {
   const location = useLocation();
@@ -42,10 +43,12 @@ function App() {
 
   return (
     <div className="min-h-screen">
-      <HeroSection />
-      <HowItWorksSection />
-      <ExamplesSection />
-      <SignupSection />
+      <SignupProvider>
+        <HeroSection />
+        <HowItWorksSection />
+        <ExamplesSection />
+        <SignupSection />
+      </SignupProvider>
       <Footer />
       {config.enableVercelAnalytics && <Analytics />}
     </div>

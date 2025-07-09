@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Upload, Paintbrush, Package } from 'lucide-react';
+import { Upload, Package, Mail } from 'lucide-react';
 
 const HowItWorksSection: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -31,19 +31,19 @@ const HowItWorksSection: React.FC = () => {
 
   const steps = [
     {
-      icon: Upload,
-      title: "Upload your photo",
+      icon: Mail,
+      title: "Upload",
       description: "Pick a memory your child loves — birthdays, pets, holidays."
     },
     {
-      icon: Paintbrush,
-      title: "We turn it into a coloring page",
-      description: "Hand-drawn style, designed for little hands."
+      icon: Upload,
+      title: "Transform",
+      description: "We turn your photo into a hand-drawn coloring page, made for little hands."
     },
     {
       icon: Package,
-      title: "Delivered to you",
-      description: "Get a printable PDF or order a shippable book."
+      title: "Deliver",
+      description: "Your custom coloring book arrives at your door."
     }
   ];
 
@@ -64,7 +64,7 @@ const HowItWorksSection: React.FC = () => {
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div className="text-center">
                 <h3 className="font-inter font-semibold text-lg text-charcoal mb-4">Your Family Photo</h3>
-                <div className="bg-gradient-to-br from-pink-100 to-yellow-100 rounded-lg p-4 aspect-[3/4] w-3/4 mx-auto flex items-center justify-center transform transition-all duration-700 hover:scale-105 hover:shadow-xl">
+                <div className="bg-gradient-to-br from-pink-100 to-yellow-100 rounded-lg p-4 aspect-[3/4] w-full max-w-xs sm:w-3/4 mx-auto flex items-center justify-center transform transition-all duration-700 hover:scale-105 hover:shadow-xl">
                   <img 
                     src="/images/fourth-july-before.jpeg"
                     alt="Family photo for coloring page"
@@ -75,7 +75,7 @@ const HowItWorksSection: React.FC = () => {
               
               <div className="text-center">
                 <h3 className="font-inter font-semibold text-lg text-charcoal mb-4">Your Custom Coloring Page</h3>
-                <div className="bg-gradient-to-br from-pink-100 to-yellow-100 rounded-lg p-4 aspect-[3/4] w-3/4 mx-auto flex items-center justify-center transform transition-all duration-700 hover:scale-105 hover:shadow-xl">
+                <div className="bg-gradient-to-br from-pink-100 to-yellow-100 rounded-lg p-4 aspect-[3/4] w-full max-w-xs sm:w-3/4 mx-auto flex items-center justify-center transform transition-all duration-700 hover:scale-105 hover:shadow-xl">
                   <img 
                     src="/images/fourth-july-after.png"
                     alt="Coloring page created from family photo"
@@ -88,11 +88,11 @@ const HowItWorksSection: React.FC = () => {
         </div>
 
         {/* Steps */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-12 gap-y-10 text-center">
           {steps.map((step, index) => (
             <div 
               key={index}
-              className={`text-center p-6 opacity-0 ${
+              className={`p-4 sm:p-6 opacity-0 ${
                 isVisible ? 'animate-scroll-fade-up' : ''
               }`}
               style={{ 
@@ -100,13 +100,13 @@ const HowItWorksSection: React.FC = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <div className="bg-gradient-accent rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 transform transition-all duration-500 hover:scale-110 hover:shadow-lg">
-                <step.icon className="w-10 h-10 text-charcoal" />
+              <div className="bg-gradient-accent rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 transition-transform duration-300 hover:scale-105">
+                <step.icon className="w-10 h-10 text-charcoal" strokeWidth={2.2} />
               </div>
-              <h3 className="font-playfair text-2xl font-semibold text-charcoal mb-4">
+              <h3 className="font-playfair font-bold text-2xl text-charcoal mt-2 mb-2">
                 {step.title}
               </h3>
-              <p className="font-inter text-gray-600 leading-relaxed">
+              <p className="text-base sm:text-sm text-gray-600 mt-2 text-center max-w-xs mx-auto">
                 {step.description}
               </p>
             </div>

@@ -1,7 +1,7 @@
 // Environment Configuration
 export const config = {
   // Meta Pixel Configuration
-  metaPixelId: import.meta.env.VITE_META_PIXEL_ID || 'YOUR_PIXEL_ID_HERE',
+  metaPixelId: '1789355165265332',
   
   // Supabase Configuration (if needed)
   supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
